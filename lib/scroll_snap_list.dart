@@ -157,6 +157,8 @@ class ScrollSnapListState extends State<ScrollSnapList> {
   //Current scroll-position in pixel
   double currentPixel = 0;
 
+  bool didHandleEnd = false;
+
   void initState() {
     super.initState();
     WidgetsBinding.instance!.addPostFrameCallback((_) {
@@ -320,7 +322,7 @@ class ScrollSnapListState extends State<ScrollSnapList> {
               onNotification: (ScrollNotification scrollInfo) {
                 if (scrollInfo is ScrollEndNotification) {
                   // dont snap until after first drag
-                  if (isInit) {
+                  if (isInit || didHandleEnd) {
                     return true;
                   }
 
@@ -329,6 +331,7 @@ class ScrollSnapListState extends State<ScrollSnapList> {
                   if (scrollInfo.metrics.pixels >=
                       scrollInfo.metrics.maxScrollExtent - tolerance) {
                     _onReachEnd();
+                    didHandleEnd = true;
                   }
 
                   //snap the selection
@@ -342,6 +345,7 @@ class ScrollSnapListState extends State<ScrollSnapList> {
                     _animateScroll(offset);
                   }
                 } else if (scrollInfo is ScrollUpdateNotification) {
+                  didHandleEnd = false;
                   //save pixel position for scale-effect
                   if (widget.dynamicItemSize ||
                       widget.dynamicItemOpacity != null) {
