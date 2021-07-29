@@ -39,7 +39,7 @@ class ScrollSnapList extends StatefulWidget {
   final EdgeInsetsGeometry? margin;
 
   ///Number of item in this list
-  final int? itemCount;
+  final int itemCount;
 
   ///Composed of the size of each item + its margin/padding.
   ///Size used is width if `scrollDirection` is `Axis.horizontal`, height if `Axis.vertical`.
@@ -113,16 +113,21 @@ class ScrollSnapList extends StatefulWidget {
   ///{@macro flutter.widgets.scroll_view.keyboardDismissBehavior}
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
 
+  ///Allow List items to be scrolled using other direction
+  ///(e.g scroll items vertically if `ScrollSnapList` axis is `Axis.horizontal`)
+  final bool allowAnotherDirection;
+
   ScrollSnapList(
       {this.background,
       required this.itemBuilder,
       ScrollController? listController,
       this.curve = Curves.ease,
+      this.allowAnotherDirection = true,
       this.duration = 500,
       this.endOfListTolerance,
       this.focusOnItemTap = true,
       this.focusToItem,
-      this.itemCount,
+      required this.itemCount,
       required this.itemSize,
       this.key,
       this.listViewKey,
@@ -152,8 +157,10 @@ class ScrollSnapList extends StatefulWidget {
 class ScrollSnapListState extends State<ScrollSnapList> {
   //true if initialIndex exists and first drag hasn't occurred
   bool isInit = true;
+
   //to avoid multiple onItemFocus when using updateOnScroll
   int previousIndex = -1;
+
   //Current scroll-position in pixel
   double currentPixel = 0;
 
@@ -259,6 +266,13 @@ class ScrollSnapListState extends State<ScrollSnapList> {
           index != null ? index : ((pixel! - itemSize / 8) / itemSize).ceil();
     }
 
+    //Avoid index getting out of bounds
+    if (cardIndex < 0) {
+      cardIndex = 0;
+    } else if (cardIndex > widget.itemCount - 1) {
+      cardIndex = widget.itemCount - 1;
+    }
+
     //trigger onItemFocus
     if (cardIndex != previousIndex) {
       previousIndex = cardIndex;
@@ -327,6 +341,22 @@ class ScrollSnapListState extends State<ScrollSnapList> {
             onTapDown: (_) {},
             child: NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification scrollInfo) {
+                if (!widget.allowAnotherDirection) {
+                  if (scrollInfo.metrics.axisDirection == AxisDirection.right ||
+                      scrollInfo.metrics.axisDirection == AxisDirection.left) {
+                    if (widget.scrollDirection != Axis.horizontal) {
+                      return false;
+                    }
+                  }
+
+                  if (scrollInfo.metrics.axisDirection == AxisDirection.up ||
+                      scrollInfo.metrics.axisDirection == AxisDirection.down) {
+                    if (widget.scrollDirection != Axis.vertical) {
+                      return false;
+                    }
+                  }
+                }
+
                 if (scrollInfo is ScrollEndNotification) {
                   // dont snap until after first drag
                   if (isInit || didHandleEnd) {
