@@ -260,7 +260,7 @@ class ScrollSnapListState extends State<ScrollSnapList> {
         index != null ? index : ((pixel! - itemSize / 2) / itemSize).ceil();
 
     // Give last item priority if scrolled to end
-    final totalCount = widget.itemCount ?? 0;
+    final totalCount = widget.itemCount;
     if (cardIndex == totalCount - 2) {
       cardIndex =
           index != null ? index : ((pixel! - itemSize / 8) / itemSize).ceil();
