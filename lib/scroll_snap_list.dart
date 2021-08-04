@@ -251,7 +251,10 @@ class ScrollSnapListState extends State<ScrollSnapList> {
   ///
   ///Then trigger `onItemFocus`
   double _calcCardLocation(
-      {double? pixel, required double itemSize, int? index}) {
+      {double? pixel,
+      required double itemSize,
+      int? index,
+      bool isLast = false}) {
     //current pixel: pixel
     //listPadding is not considered as moving pixel by scroll (0.0 is after padding)
     //substracted by itemSize/2 (to center the item)
@@ -259,11 +262,14 @@ class ScrollSnapListState extends State<ScrollSnapList> {
     int cardIndex =
         index != null ? index : ((pixel! - itemSize / 2) / itemSize).ceil();
 
-    // Give last item priority if scrolled to end
-    final totalCount = widget.itemCount;
-    if (cardIndex == totalCount - 2) {
-      cardIndex =
-          index != null ? index : ((pixel! - itemSize / 8) / itemSize).ceil();
+    // // Give last item priority if scrolled to end
+    // final totalCount = widget.itemCount;
+    // if (cardIndex == totalCount - 2) {
+    //   cardIndex =
+    //       index != null ? index : ((pixel! - itemSize / 8) / itemSize).ceil();
+    // }
+    if (isLast) {
+      cardIndex = widget.itemCount - 1;
     }
 
     //Avoid index getting out of bounds
@@ -375,6 +381,7 @@ class ScrollSnapListState extends State<ScrollSnapList> {
                   double offset = _calcCardLocation(
                     pixel: scrollInfo.metrics.pixels,
                     itemSize: widget.itemSize,
+                    isLast: didHandleEnd,
                   );
 
                   //only animate if not yet snapped (tolerance 0.01 pixel)
