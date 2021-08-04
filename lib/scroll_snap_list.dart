@@ -381,7 +381,8 @@ class ScrollSnapListState extends State<ScrollSnapList> {
                   double offset = _calcCardLocation(
                     pixel: scrollInfo.metrics.pixels,
                     itemSize: widget.itemSize,
-                    isLast: didHandleEnd,
+                    isLast: scrollInfo.metrics.pixels >=
+                        scrollInfo.metrics.maxScrollExtent,
                   );
 
                   //only animate if not yet snapped (tolerance 0.01 pixel)
