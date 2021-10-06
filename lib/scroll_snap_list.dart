@@ -117,6 +117,10 @@ class ScrollSnapList extends StatefulWidget {
   ///(e.g scroll items vertically if `ScrollSnapList` axis is `Axis.horizontal`)
   final bool allowAnotherDirection;
 
+  ///If set to false(default) scroll notification bubbling will be canceled. Set to true to
+  ///dispatch notifications to further ancestors.
+  final bool dispatchScrollNotifications;
+
   ScrollSnapList(
       {this.background,
       required this.itemBuilder,
@@ -146,7 +150,8 @@ class ScrollSnapList extends StatefulWidget {
       this.shrinkWrap = false,
       this.scrollPhysics,
       this.clipBehavior = Clip.hardEdge,
-      this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual})
+      this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+      this.dispatchScrollNotifications = false})
       : listController = listController ?? ScrollController(),
         super(key: key);
 
@@ -394,7 +399,7 @@ class ScrollSnapListState extends State<ScrollSnapList> {
                     }
                   }
                 }
-                return true;
+                return !widget.dispatchScrollNotifications;
               },
               child: ListView.builder(
                 key: widget.listViewKey,
