@@ -229,6 +229,7 @@ Widget build(BuildContext context) {
 |clipBehavior|ListView's `clipBehavior`|
 |keyboardDismissBehavior|ListView's `keyboardDismissBehavior`|
 |allowAnotherDirection|Allow List items to be scrolled using other direction|
+|dispatchScrollNotifications|Control if ScrollNotifications should be dispatched to further ancestors. Default: false|
 
 
 ## Other Notice

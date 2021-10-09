@@ -1,3 +1,6 @@
+## [0.8.3]
+- Add flag to control to dispatch scroll notifications to further ancestors
+
 ## [0.8.2]
 - Experimental fix for iOS over-scroll bug
 
