@@ -1,3 +1,6 @@
+## [0.8.4]
+- Experimental fix overflow when changing orientation (thanks @mirrorlink)
+
 ## [0.8.3]
 - Add flag to control to dispatch scroll notifications to further ancestors (thanks @msangals)
 

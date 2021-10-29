@@ -407,9 +407,9 @@ class ScrollSnapListState extends State<ScrollSnapList> {
                 clipBehavior: widget.clipBehavior,
                 keyboardDismissBehavior: widget.keyboardDismissBehavior,
                 padding: widget.scrollDirection == Axis.horizontal
-                    ? EdgeInsets.symmetric(horizontal: _listPadding)
+                    ? EdgeInsets.symmetric(horizontal: max(0, _listPadding))
                     : EdgeInsets.symmetric(
-                        vertical: _listPadding,
+                        vertical: max(0, _listPadding),
                       ),
                 reverse: widget.reverse,
                 scrollDirection: widget.scrollDirection,
