@@ -121,6 +121,8 @@ class ScrollSnapList extends StatefulWidget {
   ///dispatch notifications to further ancestors.
   final bool dispatchScrollNotifications;
 
+  final EdgeInsetsGeometry? listViewPadding;
+
   ScrollSnapList(
       {this.background,
       required this.itemBuilder,
@@ -151,7 +153,8 @@ class ScrollSnapList extends StatefulWidget {
       this.scrollPhysics,
       this.clipBehavior = Clip.hardEdge,
       this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-      this.dispatchScrollNotifications = false})
+      this.dispatchScrollNotifications = false,
+      this.listViewPadding})
       : listController = listController ?? ScrollController(),
         super(key: key);
 
@@ -406,11 +409,12 @@ class ScrollSnapListState extends State<ScrollSnapList> {
                 controller: widget.listController,
                 clipBehavior: widget.clipBehavior,
                 keyboardDismissBehavior: widget.keyboardDismissBehavior,
-                padding: widget.scrollDirection == Axis.horizontal
+                padding: widget.listViewPadding??
+                    (widget.scrollDirection == Axis.horizontal
                     ? EdgeInsets.symmetric(horizontal: max(0, _listPadding))
                     : EdgeInsets.symmetric(
                         vertical: max(0, _listPadding),
-                      ),
+                      )),
                 reverse: widget.reverse,
                 scrollDirection: widget.scrollDirection,
                 itemBuilder: _buildListItem,
