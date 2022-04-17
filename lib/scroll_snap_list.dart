@@ -340,6 +340,12 @@ class ScrollSnapListState extends State<ScrollSnapList> {
             onTapDown: (_) {},
             child: NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification scrollInfo) {
+                //Check if the received gestures are coming directly from the ScrollSnapList. If not, skip them
+                //Try to avoid inifinte animation loop caused by multi-level NotificationListener
+                if (scrollInfo.depth > 0) {
+                  return false;
+                }
+
                 if (!widget.allowAnotherDirection) {
                   if (scrollInfo.metrics.axisDirection == AxisDirection.right ||
                       scrollInfo.metrics.axisDirection == AxisDirection.left) {
@@ -377,11 +383,7 @@ class ScrollSnapListState extends State<ScrollSnapList> {
 
                   //only animate if not yet snapped (tolerance 0.01 pixel)
                   if ((scrollInfo.metrics.pixels - offset).abs() > 0.01) {
-                    //if scroll pixel is larger than maxScroll area, we must not trigger animate (infinite loop bug on small listview area)
-                    if (!(scrollInfo.metrics.pixels >=
-                        scrollInfo.metrics.maxScrollExtent - tolerance)) {
-                      _animateScroll(offset);
-                    }
+                    _animateScroll(offset);
                   }
                 } else if (scrollInfo is ScrollUpdateNotification) {
                   //save pixel position for scale-effect

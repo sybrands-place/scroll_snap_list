@@ -1,3 +1,6 @@
+## [0.8.6]
+- Experimental fix to avoid inifinte animation loop caused by multi-level NotificationListener (thanks @rienkkk)
+
 ## [0.8.5]
 - Experimental fix for infinite loop bug on small listview area (thanks @rienkkk)
 - Expose listview padding to param (thanks @siloebb)
