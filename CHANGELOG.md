@@ -1,3 +1,7 @@
+## [0.8.5]
+- Experimental fix for infinite loop bug on small listview area (thanks @rienkkk)
+- Expose listview padding to param (thanks @siloebb)
+
 ## [0.8.4]
 - Experimental fix overflow when changing orientation (thanks @mirrorlink)
 

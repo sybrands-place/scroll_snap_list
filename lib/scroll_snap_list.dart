@@ -266,10 +266,10 @@ class ScrollSnapListState extends State<ScrollSnapList> {
         index != null ? index : ((pixel! - itemSize / 2) / itemSize).ceil();
 
     //Avoid index getting out of bounds
-    if (cardIndex < 0){
+    if (cardIndex < 0) {
       cardIndex = 0;
-    } else if (cardIndex > widget.itemCount -1){
-      cardIndex = widget.itemCount -1;
+    } else if (cardIndex > widget.itemCount - 1) {
+      cardIndex = widget.itemCount - 1;
     }
 
     //trigger onItemFocus
@@ -377,7 +377,11 @@ class ScrollSnapListState extends State<ScrollSnapList> {
 
                   //only animate if not yet snapped (tolerance 0.01 pixel)
                   if ((scrollInfo.metrics.pixels - offset).abs() > 0.01) {
-                    _animateScroll(offset);
+                    //if scroll pixel is larger than maxScroll area, we must not trigger animate (infinite loop bug on small listview area)
+                    if (!(scrollInfo.metrics.pixels >=
+                        scrollInfo.metrics.maxScrollExtent - tolerance)) {
+                      _animateScroll(offset);
+                    }
                   }
                 } else if (scrollInfo is ScrollUpdateNotification) {
                   //save pixel position for scale-effect
@@ -409,12 +413,19 @@ class ScrollSnapListState extends State<ScrollSnapList> {
                 controller: widget.listController,
                 clipBehavior: widget.clipBehavior,
                 keyboardDismissBehavior: widget.keyboardDismissBehavior,
-                padding: widget.listViewPadding??
+                padding: widget.listViewPadding ??
                     (widget.scrollDirection == Axis.horizontal
-                    ? EdgeInsets.symmetric(horizontal: max(0, _listPadding))
-                    : EdgeInsets.symmetric(
-                        vertical: max(0, _listPadding),
-                      )),
+                        ? EdgeInsets.symmetric(
+                            horizontal: max(
+                            0,
+                            _listPadding,
+                          ))
+                        : EdgeInsets.symmetric(
+                            vertical: max(
+                              0,
+                              _listPadding,
+                            ),
+                          )),
                 reverse: widget.reverse,
                 scrollDirection: widget.scrollDirection,
                 itemBuilder: _buildListItem,
