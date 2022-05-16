@@ -176,7 +176,7 @@ class ScrollSnapListState extends State<ScrollSnapList> {
 
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.initialIndex != null) {
         //set list's initial position
         focusToInitialPosition();
