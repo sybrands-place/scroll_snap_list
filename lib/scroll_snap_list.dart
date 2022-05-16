@@ -117,6 +117,12 @@ class ScrollSnapList extends StatefulWidget {
   ///(e.g scroll items vertically if `ScrollSnapList` axis is `Axis.horizontal`)
   final bool allowAnotherDirection;
 
+  ///If set to false(default) scroll notification bubbling will be canceled. Set to true to
+  ///dispatch notifications to further ancestors.
+  final bool dispatchScrollNotifications;
+
+  final EdgeInsetsGeometry? listViewPadding;
+
   ScrollSnapList(
       {this.background,
       required this.itemBuilder,
@@ -146,7 +152,9 @@ class ScrollSnapList extends StatefulWidget {
       this.shrinkWrap = false,
       this.scrollPhysics,
       this.clipBehavior = Clip.hardEdge,
-      this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual})
+      this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+      this.dispatchScrollNotifications = false,
+      this.listViewPadding})
       : listController = listController ?? ScrollController(),
         super(key: key);
 
@@ -347,6 +355,12 @@ class ScrollSnapListState extends State<ScrollSnapList> {
             onTapDown: (_) {},
             child: NotificationListener<ScrollNotification>(
               onNotification: (ScrollNotification scrollInfo) {
+                //Check if the received gestures are coming directly from the ScrollSnapList. If not, skip them
+                //Try to avoid inifinte animation loop caused by multi-level NotificationListener
+                if (scrollInfo.depth > 0) {
+                  return false;
+                }
+
                 if (!widget.allowAnotherDirection) {
                   if (scrollInfo.metrics.axisDirection == AxisDirection.right ||
                       scrollInfo.metrics.axisDirection == AxisDirection.left) {
@@ -413,18 +427,26 @@ class ScrollSnapListState extends State<ScrollSnapList> {
                     }
                   }
                 }
-                return true;
+                return !widget.dispatchScrollNotifications;
               },
               child: ListView.builder(
                 key: widget.listViewKey,
                 controller: widget.listController,
                 clipBehavior: widget.clipBehavior,
                 keyboardDismissBehavior: widget.keyboardDismissBehavior,
-                padding: widget.scrollDirection == Axis.horizontal
-                    ? EdgeInsets.symmetric(horizontal: _listPadding)
-                    : EdgeInsets.symmetric(
-                        vertical: _listPadding,
-                      ),
+                padding: widget.listViewPadding ??
+                    (widget.scrollDirection == Axis.horizontal
+                        ? EdgeInsets.symmetric(
+                            horizontal: max(
+                            0,
+                            _listPadding,
+                          ))
+                        : EdgeInsets.symmetric(
+                            vertical: max(
+                              0,
+                              _listPadding,
+                            ),
+                          )),
                 reverse: widget.reverse,
                 scrollDirection: widget.scrollDirection,
                 itemBuilder: _buildListItem,
