@@ -1,3 +1,6 @@
+## [0.9.1]
+- Minor code cleanup to remove warning
+
 ## [0.9.0]
 - Fix Flutter 3 warning for WidgetsBinding (thanks @ScratchX98)
 - Expose listPadding calculation to `calculateListPadding` to allow overriding
