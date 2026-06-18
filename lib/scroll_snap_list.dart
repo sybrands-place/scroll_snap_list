@@ -124,39 +124,42 @@ class ScrollSnapList extends StatefulWidget {
 
   final EdgeInsetsGeometry? listViewPadding;
 
-  ScrollSnapList(
-      {this.background,
-      required this.itemBuilder,
-      ScrollController? listController,
-      this.curve = Curves.ease,
-      this.allowAnotherDirection = true,
-      this.duration = 500,
-      this.endOfListTolerance,
-      this.focusOnItemTap = true,
-      this.focusToItem,
-      required this.itemCount,
-      required this.itemSize,
-      this.key,
-      this.listViewKey,
-      this.margin,
-      required this.onItemFocus,
-      this.onReachEnd,
-      this.padding,
-      this.reverse = false,
-      this.updateOnScroll,
-      this.initialIndex,
-      this.scrollDirection = Axis.horizontal,
-      this.dynamicItemSize = false,
-      this.dynamicSizeEquation,
-      this.dynamicItemOpacity,
-      this.selectedItemAnchor = SelectedItemAnchor.MIDDLE,
-      this.shrinkWrap = false,
-      this.scrollPhysics,
-      this.clipBehavior = Clip.hardEdge,
-      this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-      this.dispatchScrollNotifications = false,
-      this.listViewPadding})
-      : listController = listController ?? ScrollController(),
+  final double? listItemPadding;
+
+  ScrollSnapList({
+    this.background,
+    required this.itemBuilder,
+    ScrollController? listController,
+    this.curve = Curves.ease,
+    this.allowAnotherDirection = true,
+    this.duration = 500,
+    this.endOfListTolerance,
+    this.focusOnItemTap = true,
+    this.focusToItem,
+    required this.itemCount,
+    required this.itemSize,
+    this.key,
+    this.listViewKey,
+    this.margin,
+    required this.onItemFocus,
+    this.onReachEnd,
+    this.padding,
+    this.reverse = false,
+    this.updateOnScroll,
+    this.initialIndex,
+    this.scrollDirection = Axis.horizontal,
+    this.dynamicItemSize = false,
+    this.dynamicSizeEquation,
+    this.dynamicItemOpacity,
+    this.selectedItemAnchor = SelectedItemAnchor.MIDDLE,
+    this.shrinkWrap = false,
+    this.scrollPhysics,
+    this.clipBehavior = Clip.hardEdge,
+    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
+    this.dispatchScrollNotifications = false,
+    this.listViewPadding,
+    this.listItemPadding,
+  })  : listController = listController ?? ScrollController(),
         super(key: key);
 
   @override
@@ -430,8 +433,11 @@ class ScrollSnapListState extends State<ScrollSnapList> {
                 }
                 return !widget.dispatchScrollNotifications;
               },
-              child: ListView.builder(
+              child: ListView.separated(
                 key: widget.listViewKey,
+                separatorBuilder: (context, index) => SizedBox(
+                  width: widget.listItemPadding,
+                ),
                 scrollCacheExtent: ScrollCacheExtent.viewport(4.0),
                 controller: widget.listController,
                 clipBehavior: widget.clipBehavior,
