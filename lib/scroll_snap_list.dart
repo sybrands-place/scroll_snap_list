@@ -432,7 +432,8 @@ class ScrollSnapListState extends State<ScrollSnapList> {
               },
               child: ListView.builder(
                 key: widget.listViewKey,
-                scrollCacheExtent: ScrollCacheExtent.pixels(widget.itemSize),
+                scrollCacheExtent:
+                    ScrollCacheExtent.pixels(widget.itemSize * 2),
                 controller: widget.listController,
                 clipBehavior: widget.clipBehavior,
                 keyboardDismissBehavior: widget.keyboardDismissBehavior,
