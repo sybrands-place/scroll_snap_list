@@ -3,6 +3,7 @@ library scroll_snap_list;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 ///Anchor location for selected item in the list
 enum SelectedItemAnchor { START, MIDDLE, END }
@@ -431,6 +432,7 @@ class ScrollSnapListState extends State<ScrollSnapList> {
               },
               child: ListView.builder(
                 key: widget.listViewKey,
+                scrollCacheExtent: ScrollCacheExtent.pixels(widget.itemSize),
                 controller: widget.listController,
                 clipBehavior: widget.clipBehavior,
                 keyboardDismissBehavior: widget.keyboardDismissBehavior,
